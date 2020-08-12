@@ -1,0 +1,30 @@
+﻿<Page
+    x:Class="ProjectVise.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ProjectVise"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <muxc:NavigationView x:Name="NavView">
+            <muxc:NavigationView.MenuItems>
+                <muxc:NavigationViewItem Tag="open" Content="Open An Archive">
+                    <muxc:NavigationViewItem.Icon>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEC50;"/>
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
+                <muxc:NavigationViewItem Tag="create" Content="Create A New Archive" Icon="OpenFile"/>
+                <muxc:NavigationViewItem Tag="convert" Content="Convert Archive Format" Icon="Sync"/>
+            </muxc:NavigationView.MenuItems>            
+        </muxc:NavigationView>
+        <Button Content="Open Archive" Click="Button_Click" Margin="550,253,0,0" VerticalAlignment="Top"/>
+        <TextBlock x:Name="archivePath" HorizontalAlignment="Left" Margin="711,260,0,0" Text="Archive Path" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <Button Content="Open Folder to extract" Margin="522,320,0,0" VerticalAlignment="Top" Click="Button_Click_1"/>
+        <TextBlock x:Name="folderPath" HorizontalAlignment="Left" Margin="711,327,0,0" Text="Folder Path" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <Button Content="Extract" Margin="0,388,0,0" VerticalAlignment="Top" Click="Button_Click_2" HorizontalAlignment="Center"/>
+    </Grid>
+</Page>
