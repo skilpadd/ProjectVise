@@ -6,10 +6,12 @@ using SharpCompress.Readers;
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Animation;
 
 namespace ProjectVise
 {
@@ -18,56 +20,59 @@ namespace ProjectVise
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        StorageFile Archive { get; set; }
-        StorageFolder Folder { get; set; }
-
         public MainPage()
         {
             this.InitializeComponent();
         }
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
-            var openPicker = new FileOpenPicker();
-            openPicker.ViewMode = PickerViewMode.Thumbnail;
-            openPicker.SuggestedStartLocation = PickerLocationId.ComputerFolder;
-            openPicker.CommitButtonText = "Открыть";
-            openPicker.FileTypeFilter.Add(".rar");
-            Archive = await openPicker.PickSingleFileAsync();
-
-            if (Archive != null)
+            if (args.IsSettingsInvoked)
             {
-                archivePath.Text = Archive.Path;
+                ContentFrame.Navigate(typeof(SettingsPage));
+            }
+            else
+            {
+                var item = sender.MenuItems.OfType<NavigationViewItem>().First(x => (string)x.Content == (string)args.InvokedItem);
+                NavigateToPage(item as NavigationViewItem);
             }
         }
 
-        private async void Button_Click_1(object sender, RoutedEventArgs e)
+        private void NavigateToPage(NavigationViewItem item)
         {
-            var openPicker = new FolderPicker();
-            openPicker.ViewMode = PickerViewMode.Thumbnail;
-            openPicker.SuggestedStartLocation = PickerLocationId.ComputerFolder;
-            openPicker.FileTypeFilter.Add("*");
-
-            Folder = await openPicker.PickSingleFolderAsync();
-            if (Folder != null)
+            switch (item.Tag)
             {
-                folderPath.Text = Folder.Path;
+                case "OpenArchive":
+                    ContentFrame.Navigate(typeof(OpenArchivePage), null, new EntranceNavigationTransitionInfo());
+                    break;
+
+                case "CreateArchive":
+                    ContentFrame.Navigate(typeof(CreateArchivePage), null, new EntranceNavigationTransitionInfo());
+                    break;
+
+                case "ConvertArchive":
+                    ContentFrame.Navigate(typeof(ConvertArchivePage), null, new EntranceNavigationTransitionInfo());
+                    break;
             }
         }
 
-        private async void Button_Click_2(object sender, RoutedEventArgs e)
+        private void NavView_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
         {
-            using (var archiveStream = await Archive.OpenStreamForReadAsync())
-            using (var reader = ReaderFactory.Open(archiveStream))
+            if (ContentFrame.CanGoBack)
             {
-                while (reader.MoveToNextEntry())
+                ContentFrame.GoBack();
+            }
+        }
+
+        private void NavView_Loaded(object sender, RoutedEventArgs e)
+        {
+            foreach (NavigationViewItem item in NavView.MenuItems)
+            {
+                if (item is NavigationViewItem && item.Tag.ToString() == "OpenArchive")
                 {
-                    if (!reader.Entry.IsDirectory)
-                    {
-                        var fileToExtract = await Folder.CreateFileAsync(reader.Entry.Key);
-                        var fileStream = await fileToExtract.OpenStreamForWriteAsync();
-                        reader.WriteEntryTo(fileStream);
-                    }
+                    NavView.SelectedItem = item;
+                    NavigateToPage(item);
+                    break;
                 }
             }
         }

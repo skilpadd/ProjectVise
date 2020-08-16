@@ -10,21 +10,27 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <muxc:NavigationView x:Name="NavView">
-            <muxc:NavigationView.MenuItems>
-                <muxc:NavigationViewItem Tag="open" Content="Open An Archive">
-                    <muxc:NavigationViewItem.Icon>
+        <NavigationView x:Name="NavView"
+                        IsBackEnabled="{Binding ElementName=ContentFrame, Path=CanGoBack}" 
+                        ItemInvoked="NavView_ItemInvoked"
+                        BackRequested="NavView_BackRequested"
+                        Loaded="NavView_Loaded">
+            <NavigationView.MenuItems>
+                <NavigationViewItem Tag="OpenArchive" Content="Open An Archive">
+                    <NavigationViewItem.Icon>
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEC50;"/>
-                    </muxc:NavigationViewItem.Icon>
-                </muxc:NavigationViewItem>
-                <muxc:NavigationViewItem Tag="create" Content="Create A New Archive" Icon="OpenFile"/>
-                <muxc:NavigationViewItem Tag="convert" Content="Convert Archive Format" Icon="Sync"/>
-            </muxc:NavigationView.MenuItems>            
-        </muxc:NavigationView>
-        <Button Content="Open Archive" Click="Button_Click" Margin="550,253,0,0" VerticalAlignment="Top"/>
-        <TextBlock x:Name="archivePath" HorizontalAlignment="Left" Margin="711,260,0,0" Text="Archive Path" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <Button Content="Open Folder to extract" Margin="522,320,0,0" VerticalAlignment="Top" Click="Button_Click_1"/>
-        <TextBlock x:Name="folderPath" HorizontalAlignment="Left" Margin="711,327,0,0" Text="Folder Path" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <Button Content="Extract" Margin="0,388,0,0" VerticalAlignment="Top" Click="Button_Click_2" HorizontalAlignment="Center"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Tag="CreateArchive" Content="Create A New Archive" Icon="OpenFile"/>
+                <NavigationViewItem Tag="ConvertArchive" Content="Convert Archive Format" Icon="Sync"/>
+            </NavigationView.MenuItems>
+            <Frame x:Name="ContentFrame">
+                <Frame.ContentTransitions>
+                <TransitionCollection>
+                    <NavigationThemeTransition/>
+                </TransitionCollection>
+            </Frame.ContentTransitions>
+            </Frame>
+        </NavigationView>
     </Grid>
 </Page>
